@@ -123,6 +123,18 @@ solana-donation/
 6. Approves transaction in wallet
 7. Transaction confirmed → Success! 🎉
 
+## 🔍 Verify Transactions
+
+After donating, you can verify your transaction on **Solscan** block explorer:
+
+### Devnet Transactions
+- **Account**: [https://solscan.io/account/<WALLET_ADDRESS>?cluster=devnet]
+- **Transaction**: `https://solscan.io/tx/<SIGNATURE>?cluster=devnet`
+
+### Mainnet Transactions
+- **Account**: `https://solscan.io/account/<WALLET_ADDRESS>`
+- **Transaction**: `https://solscan.io/tx/<SIGNATURE>`
+
 ## 🚢 Deployment
 
 ### Deploy to Vercel
