@@ -1,145 +1,177 @@
 <template>
-  <div class="page-wrapper">
-    <div class="glow-orb orb-1"></div>
-    <div class="glow-orb orb-2"></div>
+  <div class="relative min-h-screen w-full flex items-center justify-center bg-[#050505] text-white font-sans overflow-hidden">
+    
+    <div class="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] bg-[#9945FF] rounded-full blur-[100px] opacity-30 animate-float"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[250px] h-[250px] bg-[#14F195] rounded-full blur-[100px] opacity-30 animate-float-reverse"></div>
 
-    <div class="main-card">
-      <div class="card-content">
+    <div class="relative z-10 w-full max-w-lg px-4 py-8">
+      <div class="bg-[#141417]/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl ring-1 ring-white/5">
 
-        <div class="top-bar">
-          <div v-if="!walletAddress" class="status-badge disconnected">
-            <span class="dot"></span> Not Connected
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 border-b border-white/5 pb-6">
+          <div 
+            class="flex items-center px-4 py-1.5 rounded-full text-xs font-bold border transition-all duration-300"
+            :class="!walletAddress 
+              ? 'text-red-400 border-red-500/20 bg-red-500/5' 
+              : 'text-[#14F195] border-[#14F195]/20 bg-[#14F195]/5 shadow-[0_0_10px_rgba(20,241,149,0.1)]'"
+          >
+            <span class="w-2 h-2 rounded-full bg-current mr-2 animate-pulse"></span>
+            {{ !walletAddress ? 'Not Connected' : truncatedAddress }}
           </div>
-          <div v-else class="status-badge connected">
-            <span class="dot"></span> {{ truncatedAddress }}
-          </div>
 
-          <button v-if="!walletAddress" @click="showWalletModal = true" class="connect-btn">
+          <button 
+            v-if="!walletAddress" 
+            @click="showWalletModal = true" 
+            class="w-full sm:w-auto bg-white text-black px-6 py-2 rounded-xl text-xs font-bold hover:bg-gray-200 hover:-translate-y-0.5 transition-all shadow-lg shadow-white/10"
+          >
             Connect Wallet
           </button>
-          <button v-else @click="disconnectWallet" class="disconnect-btn">
+          <button 
+            v-else 
+            @click="disconnectWallet" 
+            class="w-full sm:w-auto bg-white/5 text-gray-300 border border-white/10 px-6 py-2 rounded-xl text-xs font-bold hover:bg-white/10 hover:text-white transition-all"
+          >
             Disconnect
           </button>
         </div>
 
-        <div class="header-section">
-          <div class="icon-container">
-            <span class="emoji">☕</span>
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-white/5 rounded-2xl mb-6 text-4xl shadow-[0_0_30px_rgba(153,69,255,0.15)] ring-1 ring-white/10">
+            ☕
           </div>
-          <h1 class="title">Fuel the Code</h1>
-          <p class="subtitle">Support the project via Solana Network.<br>Select a specific amount below.</p>
+          <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3 tracking-tight">
+            Fuel the Code
+          </h1>
+          <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-xs mx-auto">
+            Support the project via Solana Network.<br class="hidden sm:block">Every transaction keeps the updates coming.
+          </p>
         </div>
 
-        <div class="grid-options" :class="{ 'disabled': !walletAddress }">
-          <button @click="handleDonate(0.1)" class="option-card">
-            <div class="option-bg"></div>
-            <span class="amount">0.1 SOL</span>
-            <span class="tier-label">Seed</span>
+        <div 
+          class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 transition-all duration-300"
+          :class="{ 'opacity-50 pointer-events-none grayscale': !walletAddress }"
+        >
+          <button @click="handleDonate(0.1)" class="group relative bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#9945FF]/50 hover:bg-[#9945FF]/5 hover:-translate-y-1 transition-all duration-300">
+            <span class="block font-mono font-bold text-lg mb-1 group-hover:text-[#9945FF] transition-colors">0.1 SOL</span>
+            <span class="text-xs text-gray-500 font-medium">Seed</span>
           </button>
 
-          <button @click="handleDonate(0.5)" class="option-card featured">
-            <div class="featured-badge">POPULAR</div>
-            <div class="option-bg"></div>
-            <span class="amount">0.5 SOL</span>
-            <span class="tier-label">Builder</span>
+          <button @click="handleDonate(0.5)" class="group relative bg-[#14F195]/5 border border-[#14F195]/30 rounded-2xl p-4 hover:border-[#14F195] hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(20,241,149,0.05)] hover:shadow-[0_0_30px_rgba(20,241,149,0.2)]">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#14F195] text-[#050505] text-[10px] font-extrabold px-3 py-1 rounded-full shadow-lg tracking-wide">
+              POPULAR
+            </div>
+            <span class="block font-mono font-bold text-lg mb-1 text-[#14F195]">0.5 SOL</span>
+            <span class="text-xs text-[#14F195]/70 font-medium">Builder</span>
           </button>
 
-          <button @click="handleDonate(1)" class="option-card">
-            <div class="option-bg"></div>
-            <span class="amount">1.0 SOL</span>
-            <span class="tier-label">Architect</span>
+          <button @click="handleDonate(1)" class="group relative bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#9945FF]/50 hover:bg-[#9945FF]/5 hover:-translate-y-1 transition-all duration-300">
+            <span class="block font-mono font-bold text-lg mb-1 group-hover:text-[#9945FF] transition-colors">1.0 SOL</span>
+            <span class="text-xs text-gray-500 font-medium">Architect</span>
           </button>
         </div>
 
-        <div class="divider"><span>OR MANUAL TRANSFER</span></div>
-        <div class="wallet-component" @click="copyDestAddress">
-          <div class="wallet-info">
-            <span class="label">Dev Wallet Address</span>
-            <code class="address-text">{{ truncatedDestAddress }}</code>
+        <div class="relative flex py-2 items-center mb-6">
+          <div class="flex-grow border-t border-white/5"></div>
+          <span class="flex-shrink-0 mx-4 text-gray-600 text-[10px] font-bold tracking-widest uppercase">Or Manual Transfer</span>
+          <div class="flex-grow border-t border-white/5"></div>
+        </div>
+
+        <div 
+          @click="copyDestAddress"
+          class="group flex justify-between items-center bg-black/40 border border-white/10 p-4 rounded-xl cursor-pointer hover:border-white/30 hover:bg-black/60 transition-all active:scale-[0.98]"
+        >
+          <div class="flex flex-col overflow-hidden mr-4">
+            <span class="text-[10px] text-gray-500 font-bold mb-1 tracking-wide">DEV WALLET ADDRESS</span>
+            <code class="text-[#14F195] font-mono text-sm truncate group-hover:text-white transition-colors">{{ truncatedDestAddress }}</code>
           </div>
-          <div class="action-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
+          <div class="p-2 bg-white/5 rounded-lg text-gray-500 group-hover:text-white group-hover:bg-white/10 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           </div>
         </div>
 
       </div>
     </div>
 
-    <div v-if="showWalletModal" class="modal-overlay" @click.self="showWalletModal = false">
-      <div class="modal-card">
-        <div class="modal-header">
-          <h3>Connect Wallet</h3>
-          <button class="close-btn" @click="showWalletModal = false">×</button>
-        </div>
-
-        <div class="wallet-list">
-          <div class="wallet-item" :class="{ 'selected': selectedWallet === 'Phantom' }"
-            @click="selectedWallet = 'Phantom'">
-            <div class="wallet-icon phantom-bg">
-              <svg width="24" height="24" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="64" cy="64" r="64" fill="url(#phantom-grad)"/>
-                <path d="M110.5 64C110.5 88.9 90.3 109 65.9 109H39.7C36.2 109 33.4 106.2 33.4 102.7V57.4C33.4 37.1 49.8 20.7 70.1 20.7C90.4 20.7 110.5 37.1 110.5 57.4V64Z" fill="white"/>
-                <ellipse cx="54" cy="64" rx="8" ry="9" fill="#4E44CE"/>
-                <ellipse cx="78" cy="64" rx="8" ry="9" fill="#4E44CE"/>
-                <defs><linearGradient id="phantom-grad" x1="0" y1="0" x2="128" y2="128"><stop stop-color="#534BB1"/><stop offset="1" stop-color="#551BF9"/></linearGradient></defs>
-              </svg>
-            </div>
-            <span>Phantom</span>
-            <span v-if="selectedWallet === 'Phantom'" class="check">✓</span>
+    <Transition name="fade">
+      <div v-if="showWalletModal" class="fixed inset-0 z-50 flex items-center justify-center px-4" @click.self="showWalletModal = false">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        
+        <div class="relative bg-[#1a1a1f] border border-white/10 w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-slide-up">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold">Connect Wallet</h3>
+            <button class="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors" @click="showWalletModal = false">✕</button>
           </div>
 
-          <div class="wallet-item" :class="{ 'selected': selectedWallet === 'Solflare' }"
-            @click="selectedWallet = 'Solflare'">
-            <div class="wallet-icon solflare-bg">
-              <img src="https://solflare.com/favicon.ico" width="24" height="24" alt="Solflare" />
+          <div class="space-y-3 mb-8">
+            <div 
+              v-for="wallet in ['Phantom', 'Solflare', 'Backpack']" 
+              :key="wallet"
+              class="flex items-center p-4 rounded-xl border cursor-pointer transition-all duration-200"
+              :class="selectedWallet === wallet ? 'bg-[#14F195]/10 border-[#14F195] shadow-[0_0_15px_rgba(20,241,149,0.1)]' : 'bg-white/5 border-transparent hover:bg-white/10'"
+              @click="selectedWallet = wallet"
+            >
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-4"
+                   :class="{
+                     'bg-[#AB9FF2]/20': wallet === 'Phantom',
+                     'bg-[#FC7226]/20': wallet === 'Solflare',
+                     'bg-[#E33E3F]/20': wallet === 'Backpack'
+                   }">
+                 <!-- Phantom SVG Icon -->
+                 <svg v-if="wallet === 'Phantom'" width="24" height="24" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <circle cx="64" cy="64" r="64" fill="url(#phantom-grad)"/>
+                   <path d="M110.5 64C110.5 88.9 90.3 109 65.9 109H39.7C36.2 109 33.4 106.2 33.4 102.7V57.4C33.4 37.1 49.8 20.7 70.1 20.7C90.4 20.7 110.5 37.1 110.5 57.4V64Z" fill="white"/>
+                   <ellipse cx="54" cy="64" rx="8" ry="9" fill="#4E44CE"/>
+                   <ellipse cx="78" cy="64" rx="8" ry="9" fill="#4E44CE"/>
+                   <defs><linearGradient id="phantom-grad" x1="0" y1="0" x2="128" y2="128"><stop stop-color="#534BB1"/><stop offset="1" stop-color="#551BF9"/></linearGradient></defs>
+                 </svg>
+                 <!-- Solflare Favicon -->
+                 <img v-if="wallet === 'Solflare'" src="https://solflare.com/favicon.ico" width="24" height="24" alt="Solflare" />
+                 <!-- Backpack Favicon -->
+                 <img v-if="wallet === 'Backpack'" src="https://backpack.app/favicon.ico" width="24" height="24" alt="Backpack" />
+              </div>
+              <span class="font-bold text-sm tracking-wide">{{ wallet }}</span>
+              <div v-if="selectedWallet === wallet" class="ml-auto w-6 h-6 bg-[#14F195] rounded-full flex items-center justify-center text-black text-xs font-bold">✓</div>
             </div>
-            <span>Solflare</span>
-            <span v-if="selectedWallet === 'Solflare'" class="check">✓</span>
           </div>
 
-          <div class="wallet-item" :class="{ 'selected': selectedWallet === 'Backpack' }"
-            @click="selectedWallet = 'Backpack'">
-            <div class="wallet-icon backpack-bg">
-              <img src="https://backpack.app/favicon.ico" width="24" height="24" alt="Backpack" />
-            </div>
-            <span>Backpack</span>
-            <span v-if="selectedWallet === 'Backpack'" class="check">✓</span>
-          </div>
-        </div>
-
-        <button class="confirm-connect-btn" :disabled="!selectedWallet" @click="connectSelectedWallet">
-          Connect to {{ selectedWallet || 'Wallet' }}
-        </button>
-      </div>
-    </div>
-
-    <div v-if="transactionStatus !== 'idle'" class="modal-overlay">
-      <div class="status-card">
-        <div v-if="transactionStatus === 'processing'" class="status-content">
-          <div class="spinner"></div>
-          <h3>Processing Transaction</h3>
-          <p>Please approve the request in your wallet...</p>
-        </div>
-
-        <div v-if="transactionStatus === 'success'" class="status-content">
-          <div class="status-icon success">✓</div>
-          <h3>Donation Sent!</h3>
-          <p>Thank you for your support.</p>
-          <button @click="transactionStatus = 'idle'" class="close-status-btn">Awesome</button>
-        </div>
-
-        <div v-if="transactionStatus === 'error'" class="status-content">
-          <div class="status-icon error">!</div>
-          <h3>Transaction Failed</h3>
-          <p>{{ statusMessage }}</p>
-          <button @click="transactionStatus = 'idle'" class="close-status-btn">Close</button>
+          <button 
+            class="w-full py-4 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-[#050505] bg-[#14F195] hover:bg-[#12d685] hover:shadow-[0_0_20px_rgba(20,241,149,0.3)] active:scale-[0.98]"
+            :disabled="!selectedWallet" 
+            @click="connectSelectedWallet"
+          >
+            Connect to {{ selectedWallet || 'Wallet' }}
+          </button>
         </div>
       </div>
-    </div>
+    </Transition>
+
+    <Transition name="fade">
+      <div v-if="transactionStatus !== 'idle'" class="fixed inset-0 z-50 flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+        <div class="relative bg-[#1a1a1f] border border-white/10 w-full max-w-xs rounded-3xl p-8 shadow-2xl text-center animate-bounce-in">
+          
+          <div v-if="transactionStatus === 'processing'">
+            <div class="w-16 h-16 border-4 border-white/10 border-t-[#14F195] rounded-full animate-spin mx-auto mb-6"></div>
+            <h3 class="text-xl font-bold mb-2">Processing</h3>
+            <p class="text-gray-400 text-sm">Please check your wallet to approve the transaction...</p>
+          </div>
+
+          <div v-if="transactionStatus === 'success'">
+            <div class="w-16 h-16 bg-[#14F195]/20 text-[#14F195] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-[0_0_30px_rgba(20,241,149,0.2)]">✓</div>
+            <h3 class="text-xl font-bold mb-2 text-white">Donation Sent!</h3>
+            <p class="text-gray-400 text-sm mb-8">Thank you for fueling the code.</p>
+            <button @click="transactionStatus = 'idle'" class="w-full py-3 bg-white/10 rounded-xl hover:bg-white/20 font-bold text-sm transition-colors">Awesome</button>
+          </div>
+
+          <div v-if="transactionStatus === 'error'">
+            <div class="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">✕</div>
+            <h3 class="text-xl font-bold mb-2">Failed</h3>
+            <p class="text-red-400/80 text-sm mb-8 break-words">{{ statusMessage }}</p>
+            <button @click="transactionStatus = 'idle'" class="w-full py-3 bg-white/10 rounded-xl hover:bg-white/20 font-bold text-sm transition-colors">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </Transition>
 
   </div>
 </template>
@@ -148,122 +180,91 @@
 import { ref, computed } from 'vue'
 import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js'
 
-// --- CONFIG ---
-const destinationWallet = '9PnVe4SMoh3jomJba6KvHKJLLnJBt1gY1W9WiEph6Mfp'
+// --- CONFIGURATION ---
+const destinationWallet = '9PnVe4SMoh3jomJba6KvHKJLLnJBt1gY1W9WiEph6Mfp' // Ganti dengan wallet asli Anda jika sudah siap
 
-// --- STATE ---
+// --- REACTIVE STATE ---
 const showWalletModal = ref(false)
-const selectedWallet = ref < string | null > (null)
-const walletAddress = ref < string | null > (null)
-const currentProvider = ref < any > (null)
-
-// Status Transaksi: 'idle', 'processing', 'success', 'error'
-const transactionStatus = ref('idle')
+const selectedWallet = ref<string | null>(null)
+const walletAddress = ref<string | null>(null)
+const currentProvider = ref<any>(null)
+const transactionStatus = ref('idle') // 'idle' | 'processing' | 'success' | 'error'
 const statusMessage = ref('')
 
-// --- COMPUTED ---
-const truncatedDestAddress = computed(() => {
-  return `${destinationWallet.slice(0, 6)}...${destinationWallet.slice(-4)}`
-})
+// --- COMPUTED PROPERTIES ---
+const truncatedDestAddress = computed(() => `${destinationWallet.slice(0, 6)}...${destinationWallet.slice(-4)}`)
+const truncatedAddress = computed(() => !walletAddress.value ? '' : `${walletAddress.value.slice(0, 4)}...${walletAddress.value.slice(-4)}`)
 
-const truncatedAddress = computed(() => {
-  if (!walletAddress.value) return ''
-  return `${walletAddress.value.slice(0, 4)}...${walletAddress.value.slice(-4)}`
-})
-
-// --- ACTIONS ---
-
-// 1. Logic Memilih Provider Wallet
+// --- WALLET UTILITIES ---
 const getProvider = (walletName: string) => {
   if (typeof window === 'undefined') return null
   const win = window as any
-
   if (walletName === 'Phantom') {
     if (win.phantom?.solana?.isPhantom) return win.phantom.solana
-    if (win.solana?.isPhantom) return win.solana
+    if (win.solana?.isPhantom) return win.solana // Legacy support
     window.open('https://phantom.app/', '_blank')
-  }
-  else if (walletName === 'Solflare') {
+  } else if (walletName === 'Solflare') {
     if (win.solflare?.isSolflare) return win.solflare
     window.open('https://solflare.com/', '_blank')
-  }
-  else if (walletName === 'Backpack') {
+  } else if (walletName === 'Backpack') {
     if (win.backpack) return win.backpack
     window.open('https://backpack.app/', '_blank')
   }
-
-  alert(`${walletName} not found! Please install the extension.`)
   return null
 }
 
-// 2. Connect Wallet Flow
+// --- ACTIONS ---
 const connectSelectedWallet = async () => {
   if (!selectedWallet.value) return
-
   try {
     const provider = getProvider(selectedWallet.value)
     if (!provider) return
-
-    // Trigger connection modal dari extension
     const resp = await provider.connect()
-
-    // Simpan state
     currentProvider.value = provider
     walletAddress.value = resp.publicKey.toString()
-
-    // Tutup modal
     showWalletModal.value = false
-
-  } catch (err) {
-    console.error("Connection failed", err)
+  } catch (err) { 
+    console.error("Connection failed", err) 
   }
 }
 
 const disconnectWallet = () => {
-  if (currentProvider.value) {
-    currentProvider.value.disconnect()
-  }
+  if (currentProvider.value) currentProvider.value.disconnect()
   walletAddress.value = null
   currentProvider.value = null
   selectedWallet.value = null
 }
 
-// 3. Donation Logic
 const handleDonate = async (amount: number) => {
   if (!walletAddress.value || !currentProvider.value) {
-    showWalletModal.value = true
-    return
+    showWalletModal.value = true; return
   }
-
+  
   transactionStatus.value = 'processing'
+  statusMessage.value = ''
 
   try {
-    // Setup Connection (Gunakan Mainnet untuk production, Devnet untuk test)
+    // Gunakan 'confirmed' agar user tidak menunggu terlalu lama (finalized terlalu lama)
     const connection = new Connection('https://api.devnet.solana.com', 'confirmed')
-
+    
     const fromPubkey = new PublicKey(walletAddress.value)
     const toPubkey = new PublicKey(destinationWallet)
-
+    
     const transaction = new Transaction().add(
-      SystemProgram.transfer({
-        fromPubkey,
-        toPubkey,
-        lamports: amount * LAMPORTS_PER_SOL,
-      })
+      SystemProgram.transfer({ fromPubkey, toPubkey, lamports: amount * LAMPORTS_PER_SOL })
     )
-
+    
     const { blockhash } = await connection.getLatestBlockhash()
     transaction.recentBlockhash = blockhash
     transaction.feePayer = fromPubkey
-
-    // Sign & Send menggunakan provider yang aktif
+    
+    // Sign & Send
     const { signature } = await currentProvider.value.signAndSendTransaction(transaction)
-
-    // Wait for confirmation
+    
+    // Confirm
     await connection.confirmTransaction(signature)
-
+    
     transactionStatus.value = 'success'
-
   } catch (err: any) {
     console.error(err)
     transactionStatus.value = 'error'
@@ -273,463 +274,42 @@ const handleDonate = async (amount: number) => {
 
 const copyDestAddress = () => {
   navigator.clipboard.writeText(destinationWallet)
-  alert("Dev address copied!")
+  alert("Address copied to clipboard!")
 }
 </script>
 
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-
-/* Base Layout */
-.page-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #050505;
-  font-family: 'Inter', sans-serif;
-  color: #fff;
-  overflow: hidden;
-}
-
-/* Background Effects */
-.glow-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
-  z-index: 0;
-}
-
-.orb-1 {
-  width: 300px;
-  height: 300px;
-  background: #9945FF;
-  top: -50px;
-  left: -50px;
-}
-
-.orb-2 {
-  width: 250px;
-  height: 250px;
-  background: #14F195;
-  bottom: -50px;
-  right: -50px;
-}
-
-/* Main Card */
-.main-card {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  z-index: 10;
-  margin: 1rem;
-}
-
-.card-content {
-  background: rgba(20, 20, 23, 0.7);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-/* Top Bar & Status */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.status-badge {
-  display: flex;
-  align-items: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.status-badge.connected {
-  color: #14F195;
-  border: 1px solid rgba(20, 241, 149, 0.2);
-}
-
-.status-badge.disconnected {
-  color: #ff4d4d;
-  border: 1px solid rgba(255, 77, 77, 0.2);
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  margin-right: 6px;
-}
-
-.connect-btn,
-.disconnect-btn {
-  background: #fff;
-  color: #000;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.connect-btn:hover {
-  background: #e0e0e0;
-  transform: translateY(-1px);
-}
-
-.disconnect-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-/* Header */
-.header-section {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.icon-container {
-  display: inline-flex;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1rem;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-  font-size: 2rem;
-}
-
-.title {
+<style>
+/* GLOBAL CSS RESET */
+body, html {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.subtitle {
-  color: #888899;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
-/* Grid Options */
-.grid-options {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-  transition: opacity 0.3s;
-}
-
-.grid-options.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.option-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 1rem 0.5rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #fff;
-  transition: all 0.2s;
-}
-
-.option-card:hover {
-  border-color: #9945FF;
-  transform: translateY(-2px);
-}
-
-.amount {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-}
-
-.tier-label {
-  font-size: 0.7rem;
-  color: #888;
-  margin-top: 4px;
-}
-
-.featured {
-  border-color: rgba(20, 241, 149, 0.3);
-  background: rgba(20, 241, 149, 0.05);
-}
-
-.featured-badge {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #14F195;
-  color: #000;
-  font-size: 0.6rem;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-/* Wallet Component (Manual) */
-.divider {
-  display: flex;
-  align-items: center;
-  color: #444;
-  font-size: 0.7rem;
-  margin: 1.5rem 0;
-  font-weight: 700;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 0 1rem;
-}
-
-.wallet-component {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #0a0a0c;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.wallet-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.wallet-info .label {
-  font-size: 0.65rem;
-  color: #666;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.address-text {
-  color: #14F195;
-  font-family: 'JetBrains Mono';
-  font-size: 0.85rem;
-}
-
-/* --- MODAL STYLES --- */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(5px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  padding: 1rem;
+  background-color: #050505; /* Menghilangkan garis putih saat overscroll */
 }
 
-.modal-card,
-.status-card {
-  background: #1a1a1f;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 100%;
-  max-width: 360px;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  animation: slideUp 0.3s ease;
+/* CUSTOM ANIMATIONS */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, 50px); }
 }
 
+.animate-float { animation: float 10s infinite ease-in-out; }
+.animate-float-reverse { animation: float 12s infinite ease-in-out reverse; }
+
+.animate-slide-up { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
 @keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+.animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes bounceIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #888;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* Wallet List */
-.wallet-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-
-.wallet-item {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 0.8rem;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.wallet-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.wallet-item.selected {
-  border-color: #14F195;
-  background: rgba(20, 241, 149, 0.05);
-}
-
-.wallet-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-}
-
-.phantom-bg {
-  background: rgba(171, 159, 242, 0.2);
-}
-
-.solflare-bg {
-  background: rgba(252, 114, 38, 0.2);
-}
-
-.backpack-bg {
-  background: rgba(227, 62, 63, 0.2);
-}
-
-.check {
-  margin-left: auto;
-  color: #14F195;
-  font-weight: bold;
-}
-
-.confirm-connect-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  background: linear-gradient(135deg, #9945FF, #14F195);
-  color: white;
-}
-
-.confirm-connect-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: #333;
-}
-
-/* Status Modal Content */
-.status-content {
-  text-align: center;
-}
-
-.status-content h3 {
-  margin: 1rem 0 0.5rem;
-}
-
-.status-content p {
-  color: #888;
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-
-.status-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  font-size: 1.5rem;
-}
-
-.status-icon.success {
-  background: rgba(20, 241, 149, 0.2);
-  color: #14F195;
-}
-
-.status-icon.error {
-  background: rgba(255, 77, 77, 0.2);
-  color: #ff4d4d;
-}
-
-.close-status-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  padding: 10px 24px;
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Spinner */
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid #14F195;
-  border-radius: 50%;
-  margin: 0 auto;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
+/* TRANSITION UTILS */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>

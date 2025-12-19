@@ -96,8 +96,7 @@ const connection = new Connection('https://api.mainnet-beta.solana.com', 'confir
 - **Blockchain**: [Solana](https://solana.com/)
 - **Packages**:
   - `@solana/web3.js` - Solana JavaScript SDK
-  - `@solana/wallet-adapter-base` - Wallet adapter utilities
-  - `@solana/wallet-adapter-wallets` - Multi-wallet support
+  - `buffer` - Buffer polyfill for browser environment
 
 ## 📁 Project Structure
 
@@ -105,8 +104,6 @@ const connection = new Connection('https://api.mainnet-beta.solana.com', 'confir
 solana-donation/
 ├── app/
 │   └── app.vue              # Main donation page with wallet logic
-├── composables/
-│   └── useWallet.ts         # Wallet adapter composable (optional)
 ├── plugins/
 │   └── buffer.client.ts     # Buffer polyfill for browser
 ├── nuxt.config.ts           # Nuxt configuration
